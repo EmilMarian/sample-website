@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retro Hacker Terminal</title>
+  <style>
+    body {
+      background-color: black;
+      color: limegreen;
+      font-family: 'Courier New', Courier, monospace;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #terminal {
+      white-space: pre;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 20px;
+      background-color: limegreen;
+      animation: blink 1s steps(2, start) infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal"></div>
+
+  <script>
+    const terminal = document.getElementById('terminal');
+    const message = `
+    ██   ██ ███████ ██      ██       ██████         ██     ██  ██████  ██████  ██      ██████  
+    ██   ██ ██      ██      ██      ██    ██        ██     ██ ██    ██ ██   ██ ██      ██   ██ 
+    ███████ █████   ██      ██      ██    ██        ██  █  ██ ██    ██ ██████  ██      ██   ██ 
+    ██   ██ ██      ██      ██      ██    ██        ██ ███ ██ ██    ██ ██   ██ ██      ██   ██ 
+    ██   ██ ███████ ███████ ███████  ██████  ▄█      ███ ███   ██████  ██   ██ ███████ ██████  
+                                                                                       
+    `;
+
+    let index = 0;
+    const typingSpeed = 12; // Speed in milliseconds
+
+    function typeMessage() {
+      if (index < message.length) {
+        terminal.textContent += message[index];
+        index++;
+        setTimeout(typeMessage, typingSpeed);
+      } else {
+        // Add blinking cursor after typing
+        const cursor = document.createElement('span');
+        cursor.classList.add('cursor');
+        terminal.appendChild(cursor);
+      }
+    }
+
+    // Start typing the message
+    typeMessage();
+  </script>
+</body>
+</html>
