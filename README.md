@@ -1,2 +1,2 @@
-# sample-website
-A simple hello world html page.
+# A Simple Website for Learning and Testing
+A basic "Hello World" HTML page.
