@@ -1,0 +1,52 @@
+---
+- name: Deploy HTML page with Nginx
+  hosts: webservers
+  become: yes
+  
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - nginx
+        - git
+
+    - name: Create Nginx root directory
+      file:
+        path: "/var/www/html"
+        state: directory
+        mode: '0755'
+        owner: www-data
+        group: www-data
+
+    - name: Clone/Update GitHub repository
+      git:
+        repo: "https://github.com/EmilMarian/sample-website"
+        dest: "/var/www/html"
+        force: yes
+      notify: restart nginx
+
+    - name: Configure Nginx site
+      template:
+        src: "templates/nginx.conf.j2"
+        dest: "/etc/nginx/sites-available/default"
+      notify: restart nginx
+
+    - name: Enable Nginx site
+      file:
+        src: /etc/nginx/sites-available/default
+        dest: /etc/nginx/sites-enabled/default
+        state: link
+      notify: restart nginx
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
